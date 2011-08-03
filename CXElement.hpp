@@ -161,15 +161,35 @@ namespace Cinq
   class CXProcessingInstruction : protected CXAbstractBaseElement
   {
   public:
-	CXProcessingInstruction(const name_type& name)
-	  : CXAbstractBaseElement(name)
+	// CXProcessingInstruction(const name_type& name)
+	//   : CXAbstractBaseElement(name)
+	// {}
+
+	CXProcessingInstruction(const CXProcessingInstruction& c)
+	  : CXAbstractBaseElement(c)
 	{}
+
+	CXProcessingInstruction(CXProcessingInstruction&& c)
+	  : CXAbstractBaseElement(c)
+	{}
+
+	template<typename... Args>
+	CXProcessingInstruction(const name_type& name, Args... args)
+	  : CXAbstractBaseElement(name)
+	{
+	  Add(args...);
+	}
 
 	template<typename T,typename... Args>
 	void Add(T&& t, Args... args)
 	{
 	  Add(t);
 	  Add(args...);
+	}
+
+	void Add(CXAttribute a)
+	{
+	  CXAbstractBaseElement::Add(a);
 	}
 
 	virtual std::string ToString() const;
@@ -211,7 +231,19 @@ namespace Cinq
 	  return _processingInstructions;
 	}
 
+	template<typename T, typename... Args>
+	void Add(T t, Args... args)
+	{
+	  Add(t);
+	  Add(args...);
+	}
+
 	void Add(CXProcessingInstruction);
+	
+	template<typename T>
+	void Add(T t)
+	{ CXElement::Add(t); }
+
 	virtual std::string ToString() const;
   };
 }

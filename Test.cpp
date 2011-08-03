@@ -34,11 +34,17 @@ using namespace Cinq;
 int
 main(int argc, char **argv)
 {
-  CXDocument emt("element",
-				CXAttribute("hello", "world"),
-				CXElement("first"),
-				CXElement("second"));
+  CXDocument doc("element",
+				 CXAttribute("hello", "world"),
+				 CXElement("first"),
+				 CXElement("second"),
+				 CXProcessingInstruction("xml",
+										 CXAttribute("version", "1.0"),
+										 CXAttribute("encoding", "utf-8")));
+  
+  CXElement emt = *(++(doc.Elements().begin()));
 
+  std::cout << doc.ToString() << std::endl;
   std::cout << emt.ToString() << std::endl;
   return 0;
 }
